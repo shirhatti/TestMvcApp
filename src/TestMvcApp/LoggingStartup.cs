@@ -16,7 +16,15 @@ namespace TestMvcApp
         {
             builder.ConfigureLogging(loggingBuilder =>
             {
-                loggingBuilder.AddEventSourceLogger();
+                loggingBuilder.AddEventSourceLogger()
+                    .AddFilter((name, cat, level) =>
+                    {
+                        if (string.Equals("Microsoft.Extensions.Logging.EventSource.EventSourceLoggerProvider", name))
+                        {
+                            return level >= LogLevel.Information;
+                        }
+                        return false;
+                    });
             });
         }
     }
